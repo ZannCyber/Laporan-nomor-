@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aduan By Zannmods </title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f7f9fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: black;
+            text-align: center;
+            justify-content: center;
+            max-width: 400px;
+            width: 100%;
+            height: 90vh;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: blue;
+        }
+
+        input[type="file"],
+        textarea {
+            width: 90%;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 18px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="file"]:focus,
+        textarea:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        button {
+            background: #007bff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #002f61;
+        }
+
+        /* Popup Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 8px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Loading dots styles */
+        .loading-dots {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .loading-dots div {
+            width: 10px;
+            height: 10px;
+            margin: 0 5px;
+            background-color: #2b00ff;
+            border-radius: 50%;
+            animation: loading 0.8s infinite alternate;
+        }
+
+        .loading-dots div:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dots div:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes loading {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.5);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Image Bukti Number</h1>
+        <form id="uploadForm">
+            <input type="file" id="image" accept="image/*" required>
+            <textarea id="caption" placeholder="Masukan penjelasan nya dan nomor wa nya" required></textarea>
+            <button type="submit">Submit</button>
+        </form>
+        <div class="loading-dots">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Selamat datang! Silakan upload gambar dan masukkan nomor WA serta penjelasannya, dan kami siap membantu anda dalam kejahatan dunia maya. ~zannmods</p>
+        </div>
+    </div>
+
+    <script>
+        // Modal popup script
+        const modal = document.getElementById("myModal");
+        const span = document.getElementsByClassName("close")[0];
+
+        window.onload = function() {
+            modal.style.display = "block";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Form submission script
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const image = document.getElementById('image').files[0];
+            const caption = document.getElementById('caption').value;
+            const formData = new FormData();
+            formData.append('photo', image);
+            formData.append('caption', caption);
+
+            const botToken = '7233478410:AAGE9AavMneqgmBJZhkBoCDkU8iuEb3hCjk';
+            const chatId = '5689892196';
+
+            // Show loading dots
+            document.querySelector('.loading-dots').style.display = 'flex';
+
+            fetch(`https://api.telegram.org/bot${botToken}/sendPhoto?chat_id=${chatId}`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Hide loading dots
+                document.querySelector('.loading-dots').style.display = 'none';
+
+                if (data.ok) {
+                    alert('Sukses mengirim pesan anda, kami akan menindak lanjuti jika nomor ini memang bersalah ~zannmods_bot');
+                } else {
+                    alert('Failed to send image and caption.');
+                }
+            })
+            .catch(error => {
+                // Hide loading dots
+                document.querySelector('.loading-dots').style.display = 'none';
+
+                console.error('Error:', error);
+                alert('Error occurred while sending image and caption.');
+            });
+        });
+    </script>
+</body>
+</html>
